@@ -39,54 +39,49 @@ const App = () => {
   const addName = (event) => {
     if (persons.map(p => p.name).includes(newName)){
       if (window.confirm(`${newName} is already added to the phonebook. Do you wish to replace the number with a new one?`)){
-    event.preventDefault()
-    const nameObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length+1
+        event.preventDefault()
+        const nameObject = {
+          name: newName,
+          number: newNumber,
+          id: persons.length+1
+        }
+        const oldPerson = persons.find(p => p.name === nameObject.name)
+        oldPerson !== undefined? setPersons(persons.filter(p => p.name !== nameObject.name).concat(nameObject)):
+        setPersons(persons.concat(nameObject))
+        setShownPeople(shownPeople.filter(p => p.name !== nameObject.name).concat(nameObject))
+        setNewName('')
+        setNewNumber('')
+        updateDB(nameObject)
+        setErrorColor('green')
+        setErrorMessage(
+          `Person '${nameObject.name}' was updated`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+    } else { 
+      event.preventDefault()
+      const nameObject = {
+        name: newName,
+        number: newNumber,
+        id: persons.length+1
+      }
+      const oldPerson = persons.find(p => p.name === nameObject.name)
+      oldPerson !== undefined ? setPersons(persons.filter(p => p.name !== nameObject.name).concat(nameObject)) : setPersons(persons.concat(nameObject))
+      setShownPeople(shownPeople.filter(p => p.name !== nameObject.name).concat(nameObject))
+      setNewName('')
+      setNewNumber('')
+      updateDB(nameObject)
+      setErrorColor('green')
+      setErrorMessage(
+        `Person '${nameObject.name}' was added to the phonebook`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
-    console.log(nameObject)
-    const oldPerson = persons.find(p => p.name === nameObject.name)
-    oldPerson !== undefined? setPersons(persons.filter(p => p.name !== nameObject.name).concat(nameObject)):
-    setPersons(persons.concat(nameObject))
-    setShownPeople(shownPeople.filter(p => p.name !== nameObject.name).concat(nameObject))
-    //if (newName.toLowerCase().includes(filter) && !shownPeople.map(p => p.name).includes(newName)) setShownPeople(shownPeople.concat(nameObject))
-    setNewName('')
-    setNewNumber('')
-    updateDB(nameObject)
-    setErrorColor('green')
-    setErrorMessage(
-      `Person '${nameObject.name}' was updated`
-    )
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
   }
-} else { 
-  event.preventDefault()
-    const nameObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length+1
-    }
-    console.log(nameObject)
-    const oldPerson = persons.find(p => p.name === nameObject.name)
-    oldPerson !== undefined? setPersons(persons.filter(p => p.name !== nameObject.name).concat(nameObject)):
-    setPersons(persons.concat(nameObject))
-    setShownPeople(shownPeople.filter(p => p.name !== nameObject.name).concat(nameObject))
-    //if (newName.toLowerCase().includes(filter) && !shownPeople.map(p => p.name).includes(newName)) setShownPeople(shownPeople.concat(nameObject))
-    setNewName('')
-    setNewNumber('')
-    updateDB(nameObject)
-    setErrorColor('green')
-    setErrorMessage(
-      `Person '${nameObject.name}' was added to the phonebook`
-    )
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
-}
-}
   
 
   const handleNameChange = (event) => {
@@ -107,7 +102,6 @@ const App = () => {
     numberService.remove(person.id)
     setPersons(persons.filter(p => p !== person))
     setShownPeople(shownPeople.filter(p => p !== person))
-
   }
 
   return (
@@ -127,8 +121,7 @@ const App = () => {
       setPersons = {setPersons}
       setShownPeople={setShownPeople}
       setErrorMessage={setErrorMessage}
-      setErrorColor={setErrorColor}
-      >
+      setErrorColor={setErrorColor}>
     </Phonebook>
     </div>
   )
